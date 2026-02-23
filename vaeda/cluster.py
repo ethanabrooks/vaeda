@@ -54,7 +54,7 @@ def fast_cluster(X, comp=20):
     for c in np.unique(clust_meta):
         
         meta_ind = np.where(clust_meta==c)
-        ind = np.in1d(mini_clust, meta_ind)
+        ind = np.isin(mini_clust, meta_ind)
         
         clust[ind] = c
     

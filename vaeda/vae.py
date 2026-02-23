@@ -18,7 +18,7 @@ def define_clust_vae(enc_sze, ngens, num_clust, LR=1e-3, clust_weight=10000):
         tfkl.Dense(256, activation='relu'),
         tfkl.BatchNormalization(),
         tfkl.Dropout(rate=0.3),
-        tfkl.Dense(tfpl.IndependentNormal.params_size(enc_sze), activation=None),
+        tfkl.Dense(int(tfpl.IndependentNormal.params_size(enc_sze)), activation=None),
         tfpl.IndependentNormal(
             enc_sze,
             activity_regularizer=tfpl.KLDivergenceRegularizer(prior)
@@ -30,7 +30,7 @@ def define_clust_vae(enc_sze, ngens, num_clust, LR=1e-3, clust_weight=10000):
         tfkl.Dense(256, activation='relu'),
         tfkl.BatchNormalization(),
         tfkl.Dropout(rate=0.3),
-        tfkl.Dense(tfpl.IndependentNormal.params_size(ngens), activation=None),
+        tfkl.Dense(int(tfpl.IndependentNormal.params_size(ngens)), activation=None),
         tfpl.IndependentNormal(ngens)
     ], name='decoder')
 
@@ -73,7 +73,7 @@ def define_vae(enc_sze, ngens):
         tfkl.Dense(256, activation='relu'),
         tfkl.BatchNormalization(),
         tfkl.Dropout(rate=0.3),
-        tfkl.Dense(tfpl.IndependentNormal.params_size(enc_sze), activation=None),
+        tfkl.Dense(int(tfpl.IndependentNormal.params_size(enc_sze)), activation=None),
         tfpl.IndependentNormal(
             enc_sze,
             activity_regularizer=tfpl.KLDivergenceRegularizer(prior)
@@ -85,7 +85,7 @@ def define_vae(enc_sze, ngens):
         tfkl.Dense(256, activation='relu'),
         tfkl.BatchNormalization(),
         tfkl.Dropout(rate=0.3),
-        tfkl.Dense(tfpl.IndependentNormal.params_size(ngens), activation=None),
+        tfkl.Dense(int(tfpl.IndependentNormal.params_size(ngens)), activation=None),
         tfpl.IndependentNormal(ngens)
     ], name='decoder')
 
