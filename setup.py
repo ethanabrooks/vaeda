@@ -3,11 +3,6 @@ import setuptools
 with open("README.md", "r") as fh:
     description = fh.read()
 
-_tf_deps = [
-    "tensorflow_probability>=0.23",
-    "tf-keras>=2.15",
-]
-
 setuptools.setup(
     name="vaeda",
     version="0.0.30",
@@ -22,15 +17,14 @@ setuptools.setup(
     python_requires=">=3.9",
     install_requires=[
         "numpy>=1.24",
+        "tensorflow>=2.15",
         "scipy>=1.10",
         "scikit-learn>=1.2",
         "kneed>=0.8",
         "anndata>=0.9",
+        "tensorflow_probability>=0.23",
         "scanpy>1.3.3",
+        "tf-keras>=2.15",
         "leidenalg>=0.9",
     ],
-    extras_require={
-        "cpu": ["tensorflow-cpu>=2.15"] + _tf_deps,
-        "gpu": ["tensorflow>=2.15"] + _tf_deps,
-    },
 )
