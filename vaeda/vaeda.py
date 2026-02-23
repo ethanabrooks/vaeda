@@ -29,7 +29,7 @@ def vaeda(adata, layer=None, filter_genes=True, verbose=0, save_dir=None,
           N=1, k_mult=2, max_eps_PU=250, LR_PU=1e-3,
           mu=None,
           remove_homos=True, use_old=False,
-          seed=None):
+          seed=None, batch_size=32):
     """
     Parameters
     ----------
@@ -277,7 +277,8 @@ def vaeda(adata, layer=None, filter_genes=True, verbose=0, save_dir=None,
         hist = vae.fit(x=[X_train],
                        y=[X_train, clust_train],
                        validation_data=([X_test], [X_test, clust_test]),
-                       epochs=max_eps_vae, 
+                       epochs=max_eps_vae,
+                       batch_size=batch_size,
                        use_multiprocessing=True,
                        callbacks=[callback, callback2],
                        verbose=verbose)
@@ -315,7 +316,7 @@ def vaeda(adata, layer=None, filter_genes=True, verbose=0, save_dir=None,
     if(k<2):
         k=2
     
-    hist = epoch_PU(U, P, k, N, max_eps_PU, seeds=seeds[8:], puLR=LR_PU, verbose=verbose)#seeds 8-12
+    hist = epoch_PU(U, P, k, N, max_eps_PU, seeds=seeds[8:], puLR=LR_PU, verbose=verbose, batch_size=batch_size)#seeds 8-12
             
     y=np.log(hist.history['loss'])
     x=np.arange(len(y))
@@ -340,7 +341,7 @@ def vaeda(adata, layer=None, filter_genes=True, verbose=0, save_dir=None,
     elif knee>250:
         knee = 250
     
-    preds, preds_on_P, hists, _, _, _ = PU(U, P, k, N, knee, seeds=seeds[8:], puLR=LR_PU, verbose=verbose)
+    preds, preds_on_P, hists, _, _, _ = PU(U, P, k, N, knee, seeds=seeds[8:], puLR=LR_PU, verbose=verbose, batch_size=batch_size)
 
     if(save_dir is not None):
         np.save(save_dir + 'scores.npy', preds)

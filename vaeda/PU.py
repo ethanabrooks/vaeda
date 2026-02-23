@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 
 from .classifier import define_classifier
 
-def PU(U, P, k, N, cls_eps, seeds, clss='NN', puPat=5, puLR=1e-3, num_layers=1, stop_metric='ValAUC', verbose=0):
+def PU(U, P, k, N, cls_eps, seeds, clss='NN', puPat=5, puLR=1e-3, num_layers=1, stop_metric='ValAUC', verbose=0, batch_size=32):
     
     random_state = seeds[0]
     rkf = RepeatedKFold(n_splits=k, n_repeats=N, random_state=random_state)
@@ -58,20 +58,22 @@ def PU(U, P, k, N, cls_eps, seeds, clss='NN', puPat=5, puLR=1e-3, num_layers=1, 
                 tf.random.set_seed(seeds[3])
                 hist = classifier.fit(x=X,
                                       y=Y,
-                                      epochs=cls_eps, 
+                                      epochs=cls_eps,
+                                      batch_size=batch_size,
                                       verbose=False,
                                       use_multiprocessing=True)
 
             else:
-                    
+
                 ind = np.arange(X.shape[0])
                 np.random.seed(seeds[2])
                 np.random.shuffle(ind)
-                
+
                 tf.random.set_seed(seeds[3])
-                hist = classifier.fit(x=X[ind,:], 
-                                      y=Y[ind], 
-                                      epochs=cls_eps, 
+                hist = classifier.fit(x=X[ind,:],
+                                      y=Y[ind],
+                                      epochs=cls_eps,
+                                      batch_size=batch_size,
                                       verbose=False)
             
             hists[i-1,:len(hist.history['loss'])]= hist.history['loss']
@@ -105,7 +107,7 @@ def PU(U, P, k, N, cls_eps, seeds, clss='NN', puPat=5, puLR=1e-3, num_layers=1, 
 
 
 
-def epoch_PU(U, P, k, N, cls_eps, seeds, puPat=5, puLR=1e-3, num_layers=1, stop_metric='ValAUC', verbose=0):
+def epoch_PU(U, P, k, N, cls_eps, seeds, puPat=5, puLR=1e-3, num_layers=1, stop_metric='ValAUC', verbose=0, batch_size=32):
     
     random_state = seeds[0]
     rkf = RepeatedKFold(n_splits=k, n_repeats=N, random_state=random_state)
@@ -145,10 +147,11 @@ def epoch_PU(U, P, k, N, cls_eps, seeds, puPat=5, puLR=1e-3, num_layers=1, stop_
         tf.random.set_seed(seeds[3])
         hist = classifier.fit(x=X,
                               y=Y,
-                              epochs=cls_eps, 
+                              epochs=cls_eps,
+                              batch_size=batch_size,
                               verbose=False,
                               use_multiprocessing=True)
-        
+
         break
             
     return hist
